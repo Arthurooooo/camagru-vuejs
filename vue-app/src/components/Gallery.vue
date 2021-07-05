@@ -2,13 +2,13 @@
   <table>
     <tr>
       <td>
-        <img v-img src="/assets/culture1.jpg">
+        <img v-img contain src="http://localhost:8080/assets/photo1.jpg">
       </td>
       <td>
-        <img src="../assets/culture2.jpg" />
+        <img v-img src="http://localhost:8080/assets/photo2.jpg" />
       </td>
       <td>
-        <img src="../assets/culture3.jpg" />
+        <img v-img contain src="http://localhost:8080/assets/photo3.jpg" />
       </td>
     </tr>
     <tr>
@@ -21,9 +21,20 @@
 
 <script>
 export default {
-     components:{
-     }
-  };
+    name: "Gallery",
+  data() {
+    return {
+      totalVuePackages: null
+    };
+  },
+    created() {
+    // Simple GET request using fetch
+    fetch("https://api.npms.io/v2/search?q=vue")
+      .then(response => response.json())
+      .then(data => (this.totalVuePackages = data.total));
+  }
+};
+
 </script>
 
 <style scoped>
@@ -37,5 +48,9 @@ table td {
 table {
   margin-left: auto;
   margin-right: auto;
+}
+img {
+  width: 30vw;
+  height: auto;
 }
 </style>

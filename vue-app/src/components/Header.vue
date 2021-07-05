@@ -2,12 +2,15 @@
   <nav>
     <a>Home </a>
     <a>Posts </a>
-    <a>Contact</a>
+    <button>Connexion</button>
+    <sign-in></sign-in>
   </nav>
 </template>
 
 <script>
+import SignIn from './SignIn.vue'
    export default{
+  components: { SignIn },
 
    }
 </script>
