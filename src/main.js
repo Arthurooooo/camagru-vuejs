@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
-import { router } from './router'
+import router from './router/index.js'
 import store from './store';
 import VueImg from 'v-img'
 import VueLoadImage from 'vue-load-image'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import VeeValidate from 'vee-validate';
+import * as VeeValidate from 'vee-validate';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -35,8 +35,8 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-try {
-  JSON.parse("non-JSON data")
-} catch(e) {
-  console.log('Exception: ', e)
-}
+// try {
+//   JSON.parse("non-JSON data")
+// } catch(e) {
+//   console.log('Exception: ', e)
+// }

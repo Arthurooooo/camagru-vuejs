@@ -1,14 +1,11 @@
 <template>
   <table>
+    <pre>
+      {{  }}
+    </pre>
     <tr>
-      <td>
-        <img v-img contain src="http://localhost:8080/assets/photo1.jpg">
-      </td>
-      <td>
-        <img v-img src="http://localhost:8080/assets/photo2.jpg" />
-      </td>
-      <td>
-        <img v-img contain src="http://localhost:8080/assets/photo3.jpg" />
+      <td v-for="i in 3" :key="i.id">
+        <img v-img contain :src="`http://localhost:8080/photo${i}.jpg`">
       </td>
     </tr>
     <tr>
@@ -21,7 +18,13 @@
 
 <script>
 export default {
-    name: "Gallery",
+  name: "Gallery",
+  props: {
+    value: {
+      type: String,
+      default: "Salut"
+    },
+  },
   data() {
     return {
       totalVuePackages: null
