@@ -1,11 +1,5 @@
 <template>
   <div id="app">
-    <input type="number" v-model="yolo">
-    <pre style="color:red">
-      yolo = {{ yolo }}
-      yolo2 = {{ yolo2 }}
-      yolo3 = {{ yolo3 }}
-    </pre>
     <nav class="navbar navbar-expand navbar-dark bg-dark">
       <a href class="navbar-brand" @click.prevent>Camagru</a>
       <div class="navbar-nav mr-auto">
@@ -60,7 +54,7 @@
 
 export default {
   mounted() {
-    console.log(this)
+    //console.log(this)
   },
   data: () => ({
     yolo: 42,
@@ -90,7 +84,8 @@ export default {
   },
   methods: {
     logOut() {
-      //this.$store.dispatch('auth/logout');
+      this.$store.dispatch('auth/logout');
+      localStorage.removeItem('user');
       this.$router.push('/login');
     }
   },

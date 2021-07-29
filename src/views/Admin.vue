@@ -25,7 +25,7 @@ import axios from 'axios'
 },
   methods: {
         submitForm(){
-            axios.post('/api/users', this.form)
+            axios.post('/users', this.form)
                  .then((res) => {
                      console.log("added user to database" + res)
                  })

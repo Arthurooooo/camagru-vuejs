@@ -51,6 +51,12 @@ const routes = [
     name: 'user',
     // lazy-loaded
     component: () => import('../views/BoardUser.vue')
+  },
+  {
+    path: '/montage',
+    name: 'montage',
+    // lazy-loaded
+    component: () => import('../views/Montage.vue')
   }
 ]
 
