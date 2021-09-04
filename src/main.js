@@ -16,12 +16,19 @@ import {
   faSignInAlt,
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
+import Icon from 'vue-awesome/components/Icon';
+export const bus = new Vue();
+
+Vue.prototype.$bus = bus;
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+
 
 Vue.config.productionTip = false;
 
 Vue.use(VeeValidate);
+Vue.component('v-icon', Icon);
+
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

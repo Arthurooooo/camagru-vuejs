@@ -3,20 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --host localhost --port 8081",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vue/cli-service": "^4.5.13",
     "@vue/composition-api": "^1.0.0-rc.11",
     "bootstrap": "^5.0.1",
     "core-js": "^3.6.5",
+    "material-design-icons-iconfont": "^6.1.0",
+    "merge-images": "^2.0.0",
     "v-img": "^0.2.0",
     "vue": "^2.6.11",
+    "vue-awesome": "^4.3.1",
     "vue-load-image": "^0.1.12",
     "vue-router": "^3.2.0",
     "vue-web-cam": "^1.9.0",
-    "webpack": "^4.46.0",
+    "vuetify": "^2.5.8",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   },
@@ -24,7 +28,6 @@
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
@@ -43,7 +46,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-unused-vars": "off" 
+      "no-unused-vars": "off"
     }
   },
   "browserslist": [

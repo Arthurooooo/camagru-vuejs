@@ -1,10 +1,12 @@
 <template>
+<div class="header">
   <nav>
     <a>Home </a>
     <a>Posts </a>
     <button>Connexion</button>
     <sign-in></sign-in>
   </nav>
+  </div>
 </template>
 
 <script>

@@ -1,15 +1,17 @@
 import axios from 'axios';
+import store from '../store'
+
 
 const API_URL = 'http://localhost:8080/api';
 
 class ContentService{
 
-    getPost = (post) => {
+    getUserLastPosts = (post) => {
         axios.get(API_URL + '/get-image',{
         })
         .then((res) => {
             //console.log(res)
-            // console.log(this)
+            //console.log(this)
             this.img = res
             return(res)
         })
@@ -20,21 +22,19 @@ class ContentService{
 
     savePost = (postImg) => {
     var imagePath
-    var formData = new FormData();
-    formData.append('author', JSON.parse(localStorage.getItem('user')).username);
-    formData.append('img', postImg);
     var postData = {
         img : postImg,
-        author: JSON.parse(localStorage.getItem('user')).username
+        author: store.state.auth.user.id,
+        date: Date.now()
     }
+    console.log(store.state.auth.user.id)
     axios.post(API_URL + '/upload-image',{
         postData
-         }).then(res => {
+         })
+         .then(res => {
             imagePath = res.data.path
              });
-  
-
-}
+    }
 }
 
 export default new ContentService();
