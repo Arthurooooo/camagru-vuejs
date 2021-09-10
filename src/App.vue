@@ -1,86 +1,61 @@
 <template>
-  <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <a href class="navbar-brand" @click.prevent>Camagru</a>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link to="/" class="nav-link">
-            <font-awesome-icon icon="home" />Home
-          </router-link>
-        </li>
-        <li v-if="showAdminBoard" class="nav-item">
-          <router-link to="/admin" class="nav-link">Admin Board</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link v-if="currentUser" to="/montage" class="nav-link">Montage</router-link>
-        </li>
-      </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="black"
+      dark
+    >
+    <v-toolbar-title href class="navbar-brand" @click.prevent>Camagru</v-toolbar-title>
+      <v-toolbar-items>
+          <v-btn text to="/" >
+            Home
+            <v-icon>mdi-home</v-icon>
+          </v-btn>
+          <v-btn v-if="currentUser" to="/montage" >Montage</v-btn>
 
-      <div v-if="!currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">
-            <font-awesome-icon icon="user-plus" />Sign Up
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link">
-            <font-awesome-icon :icon="monIcon" />Login
-          </router-link>
-        </li>
-      </div>
+          <v-btn text v-if="!currentUser" to="/register">
+            Register
+            <v-icon>mdi-account-plus</v-icon>
+          </v-btn>
 
-      <div v-if="currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">
-            <font-awesome-icon icon="user" />
+          <v-btn text v-if="!currentUser" to="/login">
+            Login
+            <v-icon>mdi-login</v-icon>
+          </v-btn>
+      </v-toolbar-items>
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn v-if="currentUser" to="/profile" >
+          <v-icon>mdi-account</v-icon>
             {{ currentUser.username }}
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href @click.prevent="logOut">
-            <font-awesome-icon icon="sign-out-alt" />LogOut
-          </a>
-        </li>
-      </div>
-    </nav>
+        </v-btn>
+        <v-btn href v-if="currentUser" @click.prevent="logOut">
+          <v-icon icon="mdi-logout">LogOut</v-icon>
+        </v-btn>
+    </v-toolbar-items>
+    </v-app-bar>
+    <v-main>
 
-    <div class="container">
-      <router-view />
-    </div>
-  </div>
+      <router-view></router-view>
+
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 
 export default {
-  mounted() {
-    //console.log(this)
+  name: 'App',
+
+  data() {
+    return {
+      test : 0
+    }
   },
-  data: () => ({
-    yolo: 42,
-    monIcon: 'sign-in-alt',
-  }),
   computed: {
-    yolo2() {
-      return this.yolo * 2;
-    },
-    yolo3: {
-      get() {
-        return this.yolo * 3;
-      },
-      set(val) {
-        this.yolo = val;
-      }
-    },
-    currentUser() {
+  currentUser() {
       return this.$store.state.auth.user;
     },
-    showAdminBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN');
-      }
-      return false;
-    }
   },
   methods: {
     logOut() {
@@ -89,13 +64,6 @@ export default {
       this.$router.push('/login');
     }
   },
-  watch: {
-    yolo2(val, old) {
-      console.log(val, old)
-      this.yolo3 = val + 1;
-    }
-  }
-  
 };
 </script>
 
@@ -107,16 +75,13 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
 #nav {
   padding: 30px;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }

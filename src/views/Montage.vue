@@ -217,7 +217,7 @@ export default {
             this.postUpdateKey =+ 1
             console.log('getting user last posts')
             var userID = this.$store.state.auth.user.id
-            axios.get(API_URL + '/get-image',{
+            axios.get(API_URL + '/getuserlastposts',{
             params: {
                 author : userID
             }

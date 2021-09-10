@@ -28,6 +28,7 @@ const routes = [
   },
   {
     path: '/login',
+    name: 'Login',
     component: Login
   },
   {
@@ -41,35 +42,28 @@ const routes = [
     component: () => import('../views/Profile.vue')
   },
   {
-    path: '/admin',
-    name: 'admin',
-    // lazy-loaded
-    component: () => import('../views/BoardAdmin.vue')
-  },
-  {
-    path: '/user',
-    name: 'user',
-    // lazy-loaded
-    component: () => import('../views/BoardUser.vue')
-  },
-  {
     path: '/montage',
     name: 'montage',
     // lazy-loaded
     component: () => import('../views/Montage.vue')
-  }
+  },
+  {
+    path: '/verify',
+    name: 'Verified',
+    component: () => import('../views/Verified.vue')
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes,
+  routes
 })
 
 export default router
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/'];
+  const publicPages = ['/login', '/register', '/', '/verify'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 

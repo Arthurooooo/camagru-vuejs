@@ -1,27 +1,42 @@
 <template>
   <div class="col-md-12">
     <div class="card card-container">
-      <img
-        id="profile-img"
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card"
-      />
-    <form @submit.prevent="register">
-      <div>
-        <label for="username">username</label>
-        <input name="username" v-model="username" placeholder="username">
-      </div>
-      <div>
-        <label for="password">password</label>
-        <input name="password" v-model="password" placeholder="password" type="password">
-      </div>
-      <div>
-        <label for="email">email</label>
-        <input name="email" v-model="email" placeholder="email">
-      </div>
-      <input type="submit" value="register">
-    </form>
-
+    <v-form ref="form" v-model="valid" @submit.prevent="register">
+      <v-text-field
+        v-model="email"
+        :rules="emailRules"
+        label="E-mail"
+        required
+      ></v-text-field>
+      <v-text-field
+        name="username"
+        v-model="username"
+        label="username"
+        placeholder="username">
+      </v-text-field>
+      <v-text-field
+        v-model="password"
+        :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+        :rules="[passwordRules.required]"
+        type="password"
+        label="Password"
+      ></v-text-field>
+      <v-alert v-if="autherror"
+        dense
+        type="error"
+      >
+        {{this.errors}}
+      </v-alert>
+      <v-btn
+        :disabled="!valid || loading"
+        color="success"
+        :loading="loading"
+        class="mr-4"
+        @click="register"
+      >
+      Register
+        </v-btn>
+  </v-form>
       <div
         v-if="message"
         :class="['alert', successful ? 'alert-success' : 'alert-danger']"
@@ -32,6 +47,7 @@
 
 <script>
 //import User from '../models/user';
+import axios from 'axios'
 
 export default {
   name: 'Register',
@@ -43,7 +59,18 @@ export default {
       submitted: false,
       successful: false,
       message: '',
-      errors: ''
+      errors: '',
+      autherror: false,
+      loading: false,
+      valid: false,
+      show: false,
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      passwordRules: {
+          required: value => !!value || 'Required.',
+        },
     };
   },
   computed: {
@@ -58,25 +85,25 @@ export default {
   },
   methods: {
 
-    async register() {
+    register() {
+      this.loading = true;
       const { username, email, password } = this;
-      const res = await fetch(
-        "http://localhost:8080/api/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            username,
-            email,
-            password
+      axios.post("http://localhost:8080/api/signup", {
+            username:username,
+            email:email,
+            password:password
 
-          })
-        }
-      );
-      const data = await res.json();
-      console.log(data);
+          }).then(res => {
+            this.loading = false,
+            console.log('no error' + res),
+            this.$router.push('/profile').catch(() => {})
+          }
+          ).catch(error => {
+            this.loading = false
+            console.log(error.response.data.message);
+            this.autherror = true
+            this.errors = error.response.data.message;
+          });
     }
   }
 };
