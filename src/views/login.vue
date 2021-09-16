@@ -86,10 +86,7 @@ export default {
           .then(res => {
             this.loading = false
             if (res.status == 200 && res.data.accessToken) {
-            localStorage.setItem('user', JSON.stringify(res.data));
-            this.$store.state.auth.user = res.data;
-            this.$store.state.auth.status.loggedIn = true;
-            this.loggedin = true;
+            this.$store.commit('auth/loginSuccess', res.data);
             this.$router.push('/profile');
           }
         })

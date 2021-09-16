@@ -1,31 +1,11 @@
 <template>
-    <div class="container">
-        <!-- <div class="header d-flex flex-ai-center"> -->
-                <!-- <vue-web-cam
-                    ref="webcam"
-                    :device-id="deviceId"
-                    width="100%"
-                    @started="onStarted"
-                    @stopped="onStopped"
-                    @error="onError"
-                    @cameras="onCameras"
-                    @camera-change="onCameraChange"
-                /> -->
 
-          <!-- <span class="flex-1">Photo</span>
-        <button>Photo</button>
-          <button class="icon-button p-3"
-          @click="close"
-          >
-            <v-icon name="times" />
-          </button>
-        </div> -->
-
-        <div class="content pb-2">
+        <div class="content">
+          <v-card>
           <Error v-if="error" :error="error" @dismiss="() => error = null"/>
           <video id="previewVideo" autoplay="true"
             :src-object.prop.camel="previewSrc"
-            v-show="hasPreview"
+            v-show="hasPreview" class="mt-3"
           />
           <div class="canvas-container d-flex">
             <canvas id="previewCanvas" v-show="hasPreview"/>
@@ -34,137 +14,127 @@
               :src="sticker.pic" class="floating-sticker"/>
           </div>
 
-          <div class="d-flex flex-ai-center p-3">
             <!-- Take picture button -->
-            <button class="icon-button flex-1"
+            <v-btn
                   v-show="hasPreview"
                   :disabled="!canTakePicture"
                   @click="takePicture()"
             >
-              <div class="d-block">
-                <v-icon name="camera"/>
-              </div>
-              <div class="d-block mt-1">
-                  <span>Take picture</span>
-              </div>
-            </button>
+                <v-icon>mdi-camera</v-icon>
+                  Take picture
+            </v-btn>
 
-            <button class="icon-button flex-1"
-            v-show="hasPreview"
+            <v-btn
+              v-show="hasPreview"
               @click="uploadLocal()"
             >
-              <div class="d-block">
-                <v-icon name="file-upload"/>
-              </div>
-              <div class="d-block mt-1">
-                <span>Upload file</span>
-              </div>
-            </button>
+              <v-icon>mdi-upload</v-icon>
+                Upload file
+            </v-btn>
 
             <!-- Discard picture button -->
-            <button class="icon-button flex-1"
+            <v-btn
               v-show="hasPreview"
               @click="discardPicture()"
             >
-              <div class="d-block">
-                <v-icon name="trash" />
-              </div>
-              <div class="d-block mt-1">
-                <span>Discard photo</span>
-              </div>
-            </button>
+                <v-icon>mdi-delete</v-icon>
+                Discard photo
+            </v-btn>
 
             <!-- Download picture button -->
-            <button class="icon-button flex-1"
+            <v-btn
               v-show="hasPreview"
               @click="downloadPicture()"
             >
-              <div class="d-block">
-                <v-icon name="file-download" />
-              </div>
-              <div class="d-block mt-1">
-                <span>Download photo</span>
-              </div>
-            </button>
-
+                <v-icon>mdi-download</v-icon>
+                Download photo
+            </v-btn>
+</v-card>
 
           <Error v-if="error" :error="error" @dismiss="() => error = null"/>
 
           <!-- Sticker section -->
-          <div v-show="hasPreview" class="d-flex flex-jc-center mt-1 mb-1 pb-2 pt-2"
-            style="align-items: flex-start; overflow-y: auto; flex-wrap: wrap;">
+          <v-card v-show="hasPreview" class="d-flex flex-jc-center mt-1 mb-1 pb-2 pt-2"
+            style="align-items: flex-start; flex-wrap: wrap;">
             <span style="flex: 0 0 100%;" class="mb-1 mt-1">Stickers</span>
-            <button class="sticker" v-for="sticker of stickerList"
-              :key="sticker.name"
-              :style="{ 'background-image': `url(${sticker.pic})` }"
-            @click="e => onInsertSticker(e, sticker)"
-            >
-            {{ sticker.name }}
-            </button>
-          </div>
+            <v-row>
+              <v-col v-for="sticker of stickerList"
+                :key="sticker.name"
+                class="d-flex child-flex"
+                cols="1">
+                <v-btn class="sticker" 
+                @click="onInsertSticker(sticker)"
+                >
+                <v-img contain  aspect-ratio="1" :src="sticker.pic"></v-img>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card>
 
           <!-- Publish section -->
           <div v-show="hasPreview" class="publish d-flex flex-col pl-2 pr-2 mb-2">
             <!-- <span>Post</span> -->
             <div>
-              <input type="text" placeholder="Say something about this picture"
-                v-model="text" class="input">
+              <v-text-field placeholder="Say something about this picture"
+                v-model="text" ></v-text-field>
+              <v-checkbox
+                v-model="isPublic"
+                label="Make my post public"
+                ></v-checkbox>
             </div>
             <!-- Publish button -->
-            <AsyncButton
+            <v-btn
             :loading="uploading"
+            :disabled="!valid || uploading"
             @click.prevent="uploadPicture"
-            class="suggested mt-2 ml-auto">
+            class="mt-2 ml-auto">
               Publish now
-            </AsyncButton>
+              <v-icon
+              right
+              dark
+              >
+                mdi-cloud-upload
+              </v-icon>
+            </v-btn>
           </div>
-      </div>
-
-      <div class="row mt-2 d-flex justify-content-center">
-          <div class="col-md-4">
-            <label for="device">Camera</label>
-            <select
-                  v-model="camera"
-                  name="device"
-                  id="device"
-                  class="form-control"
+          <div>
+            <v-img v-for="post in postArray" :key="post._id"
+            :src="post.img"
             >
-            <option>Selectionnez votre camera</option>
-            <option
-                  v-for="device in devices"
-                  :key="device.deviceId"
-                  :value="device.deviceId"
-            >{{ device.label }}</option>
-            </select>
+                <v-btn
+                class="deletePicture"
+                fab
+                small
+                color="red"
+                @click="deletePost(post._id)"
+                >
+                <v-icon>
+                mdi-delete
+                </v-icon>
+    </v-btn>
+    </v-img>
           </div>
-        </div>
       </div>
-    </div>
 </template>
 
 <script>
-import { WebCam } from "vue-web-cam";
 import axios from 'axios';
 import ContentService from '../services/content.service.js'
 import mergeImages from 'merge-images';
 import store from '../store/'
 import stickerList from '@/store/stickerlist.module'
-import AsyncButton from '@/components/AsyncButton.vue';
 import Error from '@/components/Error.vue'
 import Camera from "@/modules/camera.module";
 import 'vue-awesome/icons';
 
 
 const API_URL = 'http://localhost:8080/api';
-import { Icon } from '@fortawesome/vue-fontawesome';
-
 
 export default {
         name: "Montage",
     props: {
     },
     components: {
-        AsyncButton,
         Error
         //"vue-web-cam": WebCam
     },
@@ -177,25 +147,24 @@ export default {
             devices: [],
             imagePath: '',
             postUpdateKey: 0,
-
-                  canTakePicture: false,
-      canvas: null,
-      cc: null,
-      currentFilter: null,
-      error: null,
-      hasPreview: true,
-      originalMime: null,
-      originalPic: null,
-      previewSrc: null,
-      stickerList,
-      stickers: [],
-      text: null,
-      uploading: false,
-      video: null,
+            isPublic: false,
+            canTakePicture: false,
+            canvas: null,
+            cc: null,
+            error: null,
+            hasPreview: true,
+            originalMime: null,
+            originalPic: null,
+            previewSrc: null,
+            stickerList,
+            stickers: [],
+            text: null,
+            uploading: false,
+            video: null,
         };
     },
 
-        methods: {
+    methods: {
         onStarted(stream) {},
         onStopped(stream) {},
         onStop() {
@@ -216,35 +185,52 @@ export default {
         getUserLastPosts(){
             this.postUpdateKey =+ 1
             console.log('getting user last posts')
-            var userID = this.$store.state.auth.user.id
             axios.get(API_URL + '/getuserlastposts',{
             params: {
-                author : userID
+                author : this.$store.state.auth.user.id
             }
             //author : this.$store.state.auth.user.id
         })
         .then((res) => {
-            //console.log(res)
-            var post = res
+            console.log(res)
             this.postArray = res.data;
             //console.log(this.img)
-            return post
+            return 
         })
         },
+        deletePost(postID){
+          axios.post(API_URL + '/deletepost',{
+            params:{
+              postID: postID,
+            }
+          }).then((res)=>{
+            console.log(postID);
+            console.log(this.postArray);
+            this.postArray.forEach(post => {
+              let i
+              if(post._id == postID){
+                this.postArray.splice(i, 1);
+                console.log('trouvé')
+              }
+              i++
+            });
+            console.log(this.postArray)
+          })
+        },
         
-            cameraInit() {
-      return new Promise((resolve, reject) => {
-        if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
-          return reject(new Error('Unsupported'));
+        cameraInit() {
+          return new Promise((resolve, reject) => {
+          if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia))
+            return reject(new Error('Unsupported'));
 
-        navigator.mediaDevices.getUserMedia({ video: true })
+          navigator.mediaDevices.getUserMedia({ video: true })
           .then((stream) => resolve(stream))
           .catch((err) => reject(err));
       });
     },
 
 
-    onInsertSticker(e, sticker) {
+    onInsertSticker(sticker) {
       this.stickers.push(sticker);
     },
         /**
@@ -360,8 +346,8 @@ export default {
         let rx = this.canvas.width / rect.width;
         let ry = this.canvas.height / rect.height;
 
-        let floats = document.querySelectorAll(`.floating-sticker`);
-        floats.forEach((el) => {
+        let floatingStickers = document.querySelectorAll(`.floating-sticker`);
+        floatingStickers.forEach((el) => {
           ctx.drawImage(el,
             0, 0,
             el.naturalWidth, el.naturalHeight,
@@ -377,8 +363,8 @@ export default {
      */
 
     async uploadPicture() {
-      if (!(this.text && this.text.trim() != '' && this.hasPreview))
-        return ;
+      if (!this.valid)
+      return
 
       console.log('uploading picture')
 
@@ -387,12 +373,13 @@ export default {
 
       try {
         const payload = {
-          text: this.text,
           author: store.state.auth.user.id,
+          text: this.text,
           date: Date.now(),
+          isPublic: this.isPublic,
           img: (await this.getFinalPicture()).toDataURL(this.originalMime || 'image/png', 0.9)
         };
-        console.log(this.originalMime);
+        //console.log(this.originalMime);
         // Don't actually know what the limit is, but it's under 20Mb
         if (payload.img[0].length / 1000000 > 20) {
           this.error = 'File is over the size limit';
@@ -405,7 +392,6 @@ export default {
           username: store.state.auth.user.username,
           picture: store.state.auth.user.picture,
         };
-        this.$bus.$emit('new-post', data);
         this.close();
       }
       catch(err) {
@@ -414,6 +400,7 @@ export default {
           this.error = err.response.data.error;
         else {
           this.error = 'Network error.';
+          console.log(err)
         }
       }
       finally { this.uploading = false }
@@ -525,6 +512,12 @@ export default {
     computed: {
         device: function() {
             return this.devices.find(n => n.deviceId === this.deviceId);
+        },
+        valid(){
+          if (!(this.text && this.text.trim() != '' && this.hasPreview))
+            return false
+          else
+            return true
         }
     },
     watch: {
@@ -584,7 +577,6 @@ img {
 }
 
 .content {
-  overflow-y: auto;
   height: 100%;
   max-height: 100%;
 }
@@ -610,7 +602,7 @@ video,
 canvas {
   max-width: 100%;
   max-height: 300px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 button.filter {
@@ -651,6 +643,9 @@ button.sticker {
 
 button.sticker.active {
   border-color: #42b4b9;
+}
+button.deletePicture{
+  float:right;
 }
 
 div.canvas-container {

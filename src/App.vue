@@ -59,8 +59,7 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
-      localStorage.removeItem('user');
+      this.$store.commit('auth/logout');
       this.$router.push('/login');
     }
   },
