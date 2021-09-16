@@ -1,3 +1,5 @@
+⚠️ THIS IS A WORK IN PROGRESS ⚠️
+
 # vue-app
 
 ## Project setup
