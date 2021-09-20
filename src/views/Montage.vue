@@ -1,18 +1,17 @@
 <template>
 
         <div class="content">
-          <v-card>
+          <v-card class="top-part">
           <Error v-if="error" :error="error" @dismiss="() => error = null"/>
-          <video id="previewVideo" autoplay="true"
-            :src-object.prop.camel="previewSrc"
-            v-show="hasPreview" class="mt-3"
-          />
-          <div class="canvas-container d-flex">
-            <canvas id="previewCanvas" v-show="hasPreview"/>
-            <img v-for="(sticker, i) in stickers" :key="i"
-              :data-sticker-id="i" :alt="sticker.name"
-              :src="sticker.pic" class="floating-sticker"/>
-          </div>
+            <video id="previewVideo" autoplay="true"
+              :src-object.prop.camel="previewSrc"
+              v-show="hasPreview" class="mt-3"/>
+            <div class="canvas-container">
+              <canvas id="previewCanvas" v-show="hasPreview"/>
+              <img v-for="(sticker, i) in stickers" :key="i"
+                :data-sticker-id="i" :alt="sticker.name"
+                :src="sticker.pic" class="floating-sticker"/>
+            </div>
 
             <!-- Take picture button -->
             <v-btn
@@ -51,6 +50,7 @@
             </v-btn>
 </v-card>
 
+      <div style="position:static">
           <Error v-if="error" :error="error" @dismiss="() => error = null"/>
 
           <!-- Sticker section -->
@@ -113,6 +113,7 @@
                 </v-icon>
     </v-btn>
     </v-img>
+          </div>
           </div>
       </div>
 </template>
@@ -214,7 +215,6 @@ export default {
               }
               i++
             });
-            console.log(this.postArray)
           })
         },
         
@@ -602,29 +602,15 @@ video,
 canvas {
   max-width: 100%;
   max-height: 300px;
-  margin: auto;
+  margin: 0 auto;
+  
 }
 
-button.filter {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  padding: 0;
-  border: none;
-  background-size: cover;
-  background-position: center;
-  box-shadow:0 1px 2px rgba(0, 0, 0, .3);
-}
-
-button.filter.active {
-  border: 2px solid black;
-}
 
 button.filter canvas {
   width: 50px;
   height: 50px;
 }
-
 .hidden {
   display: none;
 }
@@ -646,6 +632,8 @@ button.sticker.active {
 }
 button.deletePicture{
   float:right;
+  top: 3vw;
+  right: 3vw;
 }
 
 div.canvas-container {
