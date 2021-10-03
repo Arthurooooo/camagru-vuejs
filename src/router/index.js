@@ -52,6 +52,16 @@ const routes = [
     name: 'Verified',
     component: () => import('../views/Verified.vue')
   },
+  {
+    path: '/passwordreset',
+    name: 'passwordReset',
+    component: () => import('../views/PasswordReset.vue')
+  },
+  {
+    path: '/newpassword',
+    name: 'Newpassword',
+    component: () => import('../views/NewPassword.vue')
+  }
 ]
 
 const router = new VueRouter({
@@ -63,7 +73,7 @@ const router = new VueRouter({
 export default router
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/', '/verify'];
+  const publicPages = ['/login', '/register', '/', '/verify', '/passwordreset', '/newpassword'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 

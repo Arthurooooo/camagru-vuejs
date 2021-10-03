@@ -88,7 +88,7 @@ export default {
     register() {
       this.loading = true;
       const { username, email, password } = this;
-      axios.post("http://localhost:8080/api/signup", {
+      axios.post(this.$api_url  + '/api/signup', {
             username:username,
             email:email,
             password:password

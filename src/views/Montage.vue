@@ -1,5 +1,5 @@
 <template>
-
+<v-layout>
         <div class="content">
           <v-card class="top-part">
           <Error v-if="error" :error="error" @dismiss="() => error = null"/>
@@ -116,6 +116,7 @@
           </div>
           </div>
       </div>
+      </v-layout>
 </template>
 
 <script>

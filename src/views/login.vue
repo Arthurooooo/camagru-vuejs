@@ -22,6 +22,7 @@
         >
         {{this.errors}}
       </v-alert>
+      <v-btn text to="/passwordreset">Mot de passe oublié</v-btn>
         <v-btn
           :disabled="!valid || loading"
           color="success"
